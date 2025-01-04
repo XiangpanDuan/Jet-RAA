@@ -2,10 +2,10 @@
 #include <fstream>
 #include <sstream>
 #include <iomanip>
+#include <cmath>
 #include "TrilinearInterpolation.h"
 
 using namespace std;
-#define PI 3.141592653589793
 
 double bx,by;
 
@@ -42,13 +42,13 @@ void calcTrilinearInterpolation(){
   double ymin=-15.,ymax=15.;
   double xbin=(xmax-xmin)/(xnum-1);
   double ybin=(ymax-ymin)/(ynum-1);
-  double thetabin=2.*PI/thetanum; //divide thetabin
+  double thetabin=2.*M_PI/thetanum; //divide thetabin
   //Known conditions: ix,iy,itheta
   for(int ix=0; ix<xnum; ix++){
     // if(ix%10!=0) continue; //control output data format
-	  for(int iy=0; iy<ynum; iy++){
+    for(int iy=0; iy<ynum; iy++){
       // if(iy%10!=0) continue; //control output data format
-	  	for(int itheta=0; itheta<thetanum; itheta++){
+      for(int itheta=0; itheta<thetanum; itheta++){
         
         double x=ix*xbin+xmin;
         double y=iy*ybin+ymin;

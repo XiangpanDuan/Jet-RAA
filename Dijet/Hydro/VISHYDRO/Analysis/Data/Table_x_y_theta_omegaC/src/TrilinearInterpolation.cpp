@@ -35,15 +35,15 @@ void TrilinearInterpolation::setInitialData(){
   std::ifstream InputFile;
   InputFile.open("../../Table_x_y_tau_temp/Output/x_y_tau_temp.dat");
   double x_val,y_val,tau_val,temp_val;
-	for(int ix=0; ix<_xnum; ix++){
-		for(int iy=0; iy<_ynum; iy++){
-			for(int itau=0; itau<_taunum; itau++){
-				InputFile >> x_val >> y_val >> tau_val >> temp_val;
-				_Temp[ix][iy][itau]=temp_val; //attention x,y,tau
+  for(int ix=0; ix<_xnum; ix++){
+    for(int iy=0; iy<_ynum; iy++){
+      for(int itau=0; itau<_taunum; itau++){
+        InputFile >> x_val >> y_val >> tau_val >> temp_val;
+        _Temp[ix][iy][itau]=temp_val; //attention x,y,tau
         // if(x_val==0 && y_val==0 && tau_val==0.6) std::cout << ix << "  " << iy << "  " << itau << std::endl; //test zero point 
-			}
-		}
-	}
+      }
+    }
+  }
   InputFile.close();
   int xhalf=(int)(std::floor(_xnum/2));
   int yhalf=(int)(std::floor(_ynum/2));
@@ -79,11 +79,11 @@ void TrilinearInterpolation::setInputData(const double x, const double y, const 
 
 double TrilinearInterpolation::TriInterpolation(const double xin, const double yin, const double tauin){
   int xlow,xhigh,ylow,yhigh,taulow,tauhigh;
-	double dx,dy,dtau;
+  double dx,dy,dtau;
   double C,C0,C1,C00,C01,C10,C11,C000,C001,C010,C011,C100,C101,C110,C111;
   xlow=(int)(std::floor(xin/_xbin)); xhigh=xlow+1;
-	ylow=(int)(std::floor(yin/_ybin)); yhigh=ylow+1;
-	taulow=(int)(std::floor(tauin/_taubin)); tauhigh=taulow+1;  //attention
+  ylow=(int)(std::floor(yin/_ybin)); yhigh=ylow+1;
+  taulow=(int)(std::floor(tauin/_taubin)); tauhigh=taulow+1;  //attention
   if(xlow<(_xmin/_xbin) || xlow>=(_xmax/_xbin)) return 0.;
   if(ylow<(_ymin/_ybin) || ylow>=(_ymax/_ybin)) return 0.;
   if(taulow>=_taunum) return 0.;
@@ -94,23 +94,23 @@ double TrilinearInterpolation::TriInterpolation(const double xin, const double y
   int xhalf=(int)(std::floor(_xnum/2));
   int yhalf=(int)(std::floor(_ynum/2));
   C000=_Temp[xlow +xhalf][ylow +yhalf][taulow];  //get real lacation temperature
-	C001=_Temp[xlow +xhalf][ylow +yhalf][tauhigh];
-	C010=_Temp[xlow +xhalf][yhigh+yhalf][taulow];
-	C011=_Temp[xlow +xhalf][yhigh+yhalf][tauhigh];
-	C100=_Temp[xhigh+xhalf][ylow +yhalf][taulow];
-	C101=_Temp[xhigh+xhalf][ylow +yhalf][tauhigh];
-	C110=_Temp[xhigh+xhalf][yhigh+yhalf][taulow];
-	C111=_Temp[xhigh+xhalf][yhigh+yhalf][tauhigh];
-	//interpolate along x axis
-	C00=C000*(1.-dx)+C100*dx;
-	C01=C001*(1.-dx)+C101*dx;
-	C10=C010*(1.-dx)+C110*dx;
-	C11=C011*(1.-dx)+C111*dx;
-	//interpolate along y axis
-	C0=C00*(1.-dy)+C10*dy;
-	C1=C01*(1.-dy)+C11*dy;
-	//interpolate along tau axis
-	C=C0*(1.-dtau)+C1*dtau;
+  C001=_Temp[xlow +xhalf][ylow +yhalf][tauhigh];
+  C010=_Temp[xlow +xhalf][yhigh+yhalf][taulow];
+  C011=_Temp[xlow +xhalf][yhigh+yhalf][tauhigh];
+  C100=_Temp[xhigh+xhalf][ylow +yhalf][taulow];
+  C101=_Temp[xhigh+xhalf][ylow +yhalf][tauhigh];
+  C110=_Temp[xhigh+xhalf][yhigh+yhalf][taulow];
+  C111=_Temp[xhigh+xhalf][yhigh+yhalf][tauhigh];
+  //interpolate along x axis
+  C00=C000*(1.-dx)+C100*dx;
+  C01=C001*(1.-dx)+C101*dx;
+  C10=C010*(1.-dx)+C110*dx;
+  C11=C011*(1.-dx)+C111*dx;
+  //interpolate along y axis
+  C0=C00*(1.-dy)+C10*dy;
+  C1=C01*(1.-dy)+C11*dy;
+  //interpolate along tau axis
+  C=C0*(1.-dtau)+C1*dtau;
   // double CC=C000*(1.-dx)*(1.-dy)*(1.-dtau)+C001*(1.-dx)*(1.-dy)*dtau+C010*(1.-dx)*dy*(1.-dtau)+C011*(1.-dx)*dy*dtau+
   //         C100*dx*(1.-dy)*(1.-dtau)+C101*dx*(1.-dy)*dtau+C110*dx*dy*(1.-dtau)+C111*dx*dy*dtau;
   // std::cout << "C=" << C << " CC=" << CC << std::endl;

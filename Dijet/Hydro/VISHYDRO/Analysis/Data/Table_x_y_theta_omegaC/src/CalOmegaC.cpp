@@ -43,9 +43,9 @@ namespace CalOmegaC{
     //Known conditions: ix,iy,itheta
     for(int ix=0; ix<xnum; ix++){
       // if(ix%10!=0) continue;  //control OutputFile data format
-	    for(int iy=0; iy<ynum; iy++){
+      for(int iy=0; iy<ynum; iy++){
         // if(iy%10!=0) continue;  //control OutputFile data format
-	  	  for(int itheta=0; itheta<thetanum; itheta++){
+        for(int itheta=0; itheta<thetanum; itheta++){
           
           double x=ix*xbin+xmin;
           double y=iy*ybin+ymin;

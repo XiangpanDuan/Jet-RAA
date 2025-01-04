@@ -83,16 +83,16 @@ void EnergyLoss::setTempTable(){
   InputFile.open(InputString);
   std::cout << "Reading data from " << InputString << std::endl;
   double xval,yval,tauval,tempval;
-	for(int ix=0; ix<_xnum; ix++){
-		for(int iy=0; iy<_ynum; iy++){
-			for(int itau=0; itau<_taunum; itau++){
-				InputFile >> xval >> yval >> tauval >> tempval;
+  for(int ix=0; ix<_xnum; ix++){
+    for(int iy=0; iy<_ynum; iy++){
+      for(int itau=0; itau<_taunum; itau++){
+        InputFile >> xval >> yval >> tauval >> tempval;
         _elossOmegaC->setTemp(ix,iy,itau,tempval);
-				if(ix==(int)(std::floor(_xnum/2)) && iy==(int)(std::floor(_ynum/2)) && itau==6) _elossOmegaC->setTemp0(tempval);
+        if(ix==(int)(std::floor(_xnum/2)) && iy==(int)(std::floor(_ynum/2)) && itau==6) _elossOmegaC->setTemp0(tempval);
         // if(xval==0 && yval==0 && tauval==0.6) std::cout << ix << "  " << iy << "  " << itau << std::fixed << std::setprecision(16) << " Temp0=" << tempval << std::endl;  //zero point test
-			}
-		}
-	}
+      }
+    }
+  }
   InputFile.close();
 }
 
@@ -120,14 +120,14 @@ void EnergyLoss::setOmegaCTable(){
   InputFile.open(InputString);
   std::cout << "Reading data from " << InputString << std::endl;
   double xval,yval,thetaval,omegaCval;
-	for(int ix=0; ix<_xnum; ix++){
-		for(int iy=0; iy<_ynum; iy++){
-			for(int itheta=0; itheta<_thetanum; itheta++){
-				InputFile >> xval >> yval >> thetaval >> omegaCval;
-				_omegaCTable[ix][iy][itheta]=omegaCval*_qhat0;  //attention _qhat0
+  for(int ix=0; ix<_xnum; ix++){
+    for(int iy=0; iy<_ynum; iy++){
+      for(int itheta=0; itheta<_thetanum; itheta++){
+        InputFile >> xval >> yval >> thetaval >> omegaCval;
+        _omegaCTable[ix][iy][itheta]=omegaCval*_qhat0;  //attention _qhat0
       }
-		}
-	}
+    }
+  }
   InputFile.close();
   // std::cout << _omegaCTable[_xnum/2][_ynum/2][0] << std::endl; //x=0, y=0, theth=0
 }
@@ -136,14 +136,14 @@ void EnergyLoss::setOmegaCTable(){
 bool EnergyLoss::setOmegaC(const double x, const double y, const double theta){
   _omegaC=0.0;
   int xlow,xhigh,ylow,yhigh,thetalow,thetahigh;
-	double xbin,ybin,thetabin;
+  double xbin,ybin,thetabin;
   double C,C0,C1,C00,C01,C10,C11,C000,C001,C010,C011,C100,C101,C110,C111;
   xbin=(_xmax-_xmin)/(_xnum-1);
   ybin=(_ymax-_ymin)/(_ynum-1);
   thetabin=2.*M_PI/_thetanum;     //divide dtheta
   xlow=(int)(std::floor(x/xbin)); xhigh=xlow+1;
-	ylow=(int)(std::floor(y/ybin)); yhigh=ylow+1;
-	thetalow=(int)(std::floor(theta/thetabin)); thetahigh=thetalow+1;
+  ylow=(int)(std::floor(y/ybin)); yhigh=ylow+1;
+  thetalow=(int)(std::floor(theta/thetabin)); thetahigh=thetalow+1;
   if(thetalow==(_thetanum-1)) {thetahigh=0;}           //attention location angle = 0, 2PI
   if(thetalow==_thetanum) {thetalow=0; thetahigh=1;}   //attention location angle = 0, 2PI
   if(thetalow>_thetanum) return false;
@@ -157,23 +157,23 @@ bool EnergyLoss::setOmegaC(const double x, const double y, const double theta){
   int xhalf=(int)(std::floor(_xnum/2));
   int yhalf=(int)(std::floor(_ynum/2));
   C000=_omegaCTable[xlow +xhalf][ylow +yhalf][thetalow];  //get real lacation omegaCerature
-	C001=_omegaCTable[xlow +xhalf][ylow +yhalf][thetahigh];
-	C010=_omegaCTable[xlow +xhalf][yhigh+yhalf][thetalow];
-	C011=_omegaCTable[xlow +xhalf][yhigh+yhalf][thetahigh];
-	C100=_omegaCTable[xhigh+xhalf][ylow +yhalf][thetalow];
-	C101=_omegaCTable[xhigh+xhalf][ylow +yhalf][thetahigh];
-	C110=_omegaCTable[xhigh+xhalf][yhigh+yhalf][thetalow];
-	C111=_omegaCTable[xhigh+xhalf][yhigh+yhalf][thetahigh];
-	//Interpolate along x axis
-	C00=C000*(1.-dx)+C100*dx;
-	C01=C001*(1.-dx)+C101*dx;
-	C10=C010*(1.-dx)+C110*dx;
-	C11=C011*(1.-dx)+C111*dx;
-	//Interpolate along y axis
-	C0=C00*(1.-dy)+C10*dy;
-	C1=C01*(1.-dy)+C11*dy;
-	//Interpolate along theta axis
-	C=C0*(1.-dtheta)+C1*dtheta;
+  C001=_omegaCTable[xlow +xhalf][ylow +yhalf][thetahigh];
+  C010=_omegaCTable[xlow +xhalf][yhigh+yhalf][thetalow];
+  C011=_omegaCTable[xlow +xhalf][yhigh+yhalf][thetahigh];
+  C100=_omegaCTable[xhigh+xhalf][ylow +yhalf][thetalow];
+  C101=_omegaCTable[xhigh+xhalf][ylow +yhalf][thetahigh];
+  C110=_omegaCTable[xhigh+xhalf][yhigh+yhalf][thetalow];
+  C111=_omegaCTable[xhigh+xhalf][yhigh+yhalf][thetahigh];
+  //Interpolate along x axis
+  C00=C000*(1.-dx)+C100*dx;
+  C01=C001*(1.-dx)+C101*dx;
+  C10=C010*(1.-dx)+C110*dx;
+  C11=C011*(1.-dx)+C111*dx;
+  //Interpolate along y axis
+  C0=C00*(1.-dy)+C10*dy;
+  C1=C01*(1.-dy)+C11*dy;
+  //Interpolate along theta axis
+  C=C0*(1.-dtheta)+C1*dtheta;
   // C=C000*(1.-dx)*(1.-dy)*(1.-dtheta)+C001*(1.-dx)*(1.-dy)*dtheta+C010*(1.-dx)*dy*(1.-dtheta)+C011*(1.-dx)*dy*dtheta+ \
   //   C100*dx*(1.-dy)*(1.-dtheta)+C101*dx*(1.-dy)*dtheta+C110*dx*dy*(1.-dtheta)+C111*dx*dy*dtheta;
   _omegaC=C;
@@ -270,7 +270,7 @@ void EnergyLoss::setDepsilonGluonMean(){
 //   //Get initial pT
 //   double pTin=pT;
 //   double pTout=pT+_nMul*_epsilon[_iMul];
-// 	while((pTout-pTin)>0.1){
+//   while((pTout-pTin)>0.1){
 //     pTin=pTout;
 //     // //with Qmed
 //     // nVal=QGratio*std::exp(std::pow(2.*_qcd->Nc()/(M_PI*b0),0.5)*(std::sqrt(std::log((pTin*_Rsize*pTin*_Rsize)/(_lambdaQCD*_lambdaQCD)))-std::sqrt(std::log((Qmed*Qmed)/(_lambdaQCD*_lambdaQCD)))));
@@ -293,15 +293,15 @@ void EnergyLoss::setMultiplicity(const std::string &type, const double pT){
   if(type=="quark") QGratio=1.0;  //quark
   if(type=="gluon") QGratio=1.6;  //gluon
   double a=11./3.*_qcd->Nc()+2.*_qcd->Nf()/(3.*_qcd->Nc()*_qcd->Nc());
-	double b=11./3.*_qcd->Nc()-2./3.*_qcd->Nf();
-	double A=std::sqrt(16.*_qcd->Nc()/b);
-	double B=a/b;
-	// double Qmed=_lambdaQCD+1e-10;  //medium scale
+  double b=11./3.*_qcd->Nc()-2./3.*_qcd->Nf();
+  double A=std::sqrt(16.*_qcd->Nc()/b);
+  double B=a/b;
+  // double Qmed=_lambdaQCD+1e-10;  //medium scale
   double Qmed=_Qmed;   //medium scale in Multiplicity, Qmed=0.5 (default)
-	double Q=pT*_Rsize;  //R dependence
-	double ypT=std::log(Q/Qmed);
-	double lambdapT=std::log(Qmed/_lambdaQCD);
-	double YpT=ypT+lambdapT;
+  double Q=pT*_Rsize;  //R dependence
+  double ypT=std::log(Q/Qmed);
+  double lambdapT=std::log(Qmed/_lambdaQCD);
+  double YpT=ypT+lambdapT;
   double xx1=A*std::sqrt(YpT);
   double xx2=A*std::sqrt(lambdapT);
   _nMul=QGratio*varLL*xx1*(gsl_sf_bessel_I1(xx1)*gsl_sf_bessel_K0(xx2)+gsl_sf_bessel_K1(xx1)*gsl_sf_bessel_I0(xx2));  //LL
@@ -311,16 +311,16 @@ void EnergyLoss::setMultiplicity(const std::string &type, const double pT){
   //Get initial pT
   double pTin=pT;
   double pTout=pT+_nMul*_epsilon[_iMul];
-	while((pTout-pTin)>0.1){
+  while((pTout-pTin)>0.1){
     pTin=pTout;
     Q=pTin*_Rsize;  //R dependence
-		ypT=std::log(Q/Qmed);
-		lambdapT=std::log(Qmed/_lambdaQCD);
-		YpT=ypT+lambdapT;
+    ypT=std::log(Q/Qmed);
+    lambdapT=std::log(Qmed/_lambdaQCD);
+    YpT=ypT+lambdapT;
     xx1=A*std::sqrt(YpT);
     xx2=A*std::sqrt(lambdapT);
     _nMul=QGratio*varLL*xx1*(gsl_sf_bessel_I1(xx1)*gsl_sf_bessel_K0(xx2)+gsl_sf_bessel_K1(xx1)*gsl_sf_bessel_I0(xx2));  //LL
     // _nMul=QGratio*varMLL*xx1*std::pow(xx2/xx1,B)*(gsl_sf_bessel_Inu(B+1,xx1)*gsl_sf_bessel_Knu(B,xx2)+gsl_sf_bessel_Knu(B+1,xx1)*gsl_sf_bessel_Inu(B,xx2));  //MLL
-		pTout=pT+_nMul*_epsilon[_iMul];
+    pTout=pT+_nMul*_epsilon[_iMul];
   }
 }

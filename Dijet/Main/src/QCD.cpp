@@ -65,12 +65,12 @@ void QCD::setNf(const unsigned int nf){
 //2-loop function f(t)
 double QCD::f2loop(const double t, const double b0, const double b1){
   double alphaS_mZ=0.118;
-	return alphaS_mZ*std::pow(b0,3)*std::pow(t,2)-b0*b0*t+b1*std::log(t);
+  return alphaS_mZ*std::pow(b0,3)*std::pow(t,2)-b0*b0*t+b1*std::log(t);
 }
 //f'(t)
 double QCD::df2loop(const double t, const double b0, const double b1){
   double alphaS_mZ=0.118;
-	return 2.*alphaS_mZ*std::pow(b0,3)*t-b0*b0+b1/t;
+  return 2.*alphaS_mZ*std::pow(b0,3)*t-b0*b0+b1/t;
 }
 
 //Λ_QCD
@@ -84,15 +84,15 @@ double QCD::LambdaQCD(const unsigned int nloop){
   if(nloop==2){
     // double b1=(153-19.*_nf)/(24*M_PI*M_PI);
     double b1=_beta1/std::pow(4.*M_PI,2);
-	  _lambdaQCD=0.001;  //initial value used in iteration
-	  double t=std::log(_Z0->Mass()*_Z0->Mass()/(_lambdaQCD*_lambdaQCD));
+    _lambdaQCD=0.001;  //initial value used in iteration
+    double t=std::log(_Z0->Mass()*_Z0->Mass()/(_lambdaQCD*_lambdaQCD));
     
     //Newton iteration method
     int iter=0;
-	  const double errtol=1e-10;
-	  double delta=0.0;
-	  const int itermax=1000;
-	  do{
+    const double errtol=1e-10;
+    double delta=0.0;
+    const int itermax=1000;
+    do{
       double f1val=f2loop(t,b0,b1);
       double df1val=df2loop(t,b0,b1);
       delta=-f1val/df1val;
@@ -100,10 +100,10 @@ double QCD::LambdaQCD(const unsigned int nloop){
       iter++;
       if(iter>itermax){
         std::cerr << "The maximum iteration is reached." << std::endl;
-			  // exit(EXIT_FAILURE);
+        // exit(EXIT_FAILURE);
       }
     }while(fabs(delta)>errtol);
-	  _lambdaQCD=_Z0->Mass()*_Z0->Mass()/std::exp(t);  //_lambdaQCD=0.5441186 for _nf=3
+    _lambdaQCD=_Z0->Mass()*_Z0->Mass()/std::exp(t);  //_lambdaQCD=0.5441186 for _nf=3
   }
   return _lambdaQCD;
 }

@@ -245,48 +245,48 @@ void EnergyLoss::setDepsilonGluonMean(){
 
 //####################################################################################################
 //Multiplicity in jet energy loss
-//Formula 2.17(P6) in "Quenching of hadron spectra in media" [JHEP 09 (2001) 033]
+// //Formula 2.17(P6) in "Quenching of hadron spectra in media" [JHEP 09 (2001) 033]
+// void EnergyLoss::setMultiplicity(const std::string &type, const double pT){
+//   double QGratio;
+//   if(type=="quark") QGratio=1.0;  //quark
+//   if(type=="gluon") QGratio=1.6;  //gluon
+//   double TR=_qcd->TF();
+//   double b0=(11.*_qcd->Nc()-4.*_qcd->Nf()*TR)/(12.*M_PI);
+//   // double a0=1./4.+5.*_qcd->Nf()/(54.*M_PI*b0);
+//   // double varLL=0.016965;  //LLA  from pythia8 simulation
+//   double varMLL=0.0403164; //MLLA from pythia8 simulation
+//   // //Multiplicity
+//   // //with Qmed
+//   // double Qmed=0.5; //pT,track cut
+//   // double nVal;
+//   // nVal=QGratio*std::exp(std::pow(2.*_qcd->Nc()/(M_PI*b0),0.5)*(std::sqrt(std::log(((pT*_Rsize)*(pT*_Rsize))/(_lambdaQCD*_lambdaQCD)))-std::sqrt(std::log((Qmed*Qmed)/(_lambdaQCD*_lambdaQCD)))));
+//   // // _nMul=varLL*nVal; //LLA varLL with Qmed
+//   // _nMul=varMLL*nVal*std::pow(std::log((Qmed*Qmed)/(_lambdaQCD*_lambdaQCD))/std::log(((pT*_Rsize)*(pT*_Rsize))/(_lambdaQCD*_lambdaQCD)),a0); //MLLA varMLL with Qmed
+//   //without Qmed
+//   double alphaS=1./(b0*std::log((pT*_Rsize)*(pT*_Rsize)/(_lambdaQCD*_lambdaQCD)));
+//   // _nMul=QGratio*varLL*std::exp((1./b0)*std::pow(2.*_qcd->Nc()/(M_PI*alphaS),0.5)); //LLA c1
+//   _nMul=QGratio*varMLL*std::exp((1./b0)*std::pow(2.*_qcd->Nc()/(M_PI*alphaS),0.5)+(1./4.+5.*_qcd->Nf()/(54.*M_PI*b0))*std::log(alphaS)); //MLLA c2
+
+//   //Get initial pT
+//   double pTin=pT;
+//   double pTout=pT+_nMul*_epsilon[_iMul];
+// 	while((pTout-pTin)>0.1){
+//     pTin=pTout;
+//     // //with Qmed
+//     // nVal=QGratio*std::exp(std::pow(2.*_qcd->Nc()/(M_PI*b0),0.5)*(std::sqrt(std::log((pTin*_Rsize*pTin*_Rsize)/(_lambdaQCD*_lambdaQCD)))-std::sqrt(std::log((Qmed*Qmed)/(_lambdaQCD*_lambdaQCD)))));
+//     // // _nMul=varLL*nVal; //LLA varLL with Qmed
+//     // _nMul=varMLL*nVal*std::pow(std::log((Qmed*Qmed)/(_lambdaQCD*_lambdaQCD))/std::log((pTin*_Rsize*pTin*_Rsize)/(_lambdaQCD*_lambdaQCD)),a0); //MLLA varMLL with Qmed
+//     //without Qmed
+//     alphaS=1./(b0*std::log((pTin*_Rsize)*(pTin*_Rsize)/(_lambdaQCD*_lambdaQCD)));
+//     // _nMul=QGratio*varLL*std::exp((1./b0)*std::pow(2.*_qcd->Nc()/(M_PI*alphaS),0.5)); //LLA c1
+//     _nMul=QGratio*varMLL*std::exp((1./b0)*std::pow(2.*_qcd->Nc()/(M_PI*alphaS),0.5)+(1./4.+5.*_qcd->Nf()/(54.*M_PI*b0))*std::log(alphaS)); //MLLA c2
+//     pTout=pT+_nMul*_epsilon[_iMul];
+//     // std::cout << pT << " " << pTin << " " << pTout << " " << _nMul <<std::endl;
+//   }
+// }
+
+//Formula 5.51(P124) for LL and 7.34(P174) for LL and MLL in [Basics of Perturbative QCD]
 void EnergyLoss::setMultiplicity(const std::string &type, const double pT){
-  double QGratio;
-  if(type=="quark") QGratio=1.0;  //quark
-  if(type=="gluon") QGratio=1.6;  //gluon
-  double TR=_qcd->TF();
-  double b0=(11.*_qcd->Nc()-4.*_qcd->Nf()*TR)/(12.*M_PI);
-  // double a0=1./4.+5.*_qcd->Nf()/(54.*M_PI*b0);
-  // double varLL=0.016965;  //LLA  from pythia8 simulation
-  double varMLL=0.0403164; //MLLA from pythia8 simulation
-  // //Multiplicity
-  // //with Qmed
-  // double Qmed=0.5; //pT,track cut
-  // double nVal;
-  // nVal=QGratio*std::exp(std::pow(2.*_qcd->Nc()/(M_PI*b0),0.5)*(std::sqrt(std::log(((pT*_Rsize)*(pT*_Rsize))/(_lambdaQCD*_lambdaQCD)))-std::sqrt(std::log((Qmed*Qmed)/(_lambdaQCD*_lambdaQCD)))));
-  // // _nMul=varLL*nVal; //LLA varLL with Qmed
-  // _nMul=varMLL*nVal*std::pow(std::log((Qmed*Qmed)/(_lambdaQCD*_lambdaQCD))/std::log(((pT*_Rsize)*(pT*_Rsize))/(_lambdaQCD*_lambdaQCD)),a0); //MLLA varMLL with Qmed
-  //without Qmed
-  double alphaS=1./(b0*std::log((pT*_Rsize)*(pT*_Rsize)/(_lambdaQCD*_lambdaQCD)));
-  // _nMul=QGratio*varLL*std::exp((1./b0)*std::pow(2.*_qcd->Nc()/(M_PI*alphaS),0.5)); //LLA c1
-  _nMul=QGratio*varMLL*std::exp((1./b0)*std::pow(2.*_qcd->Nc()/(M_PI*alphaS),0.5)+(1./4.+5.*_qcd->Nf()/(54.*M_PI*b0))*std::log(alphaS)); //MLLA c2
-
-  //Get initial pT
-  double pTin=pT;
-  double pTout=pT+_nMul*_epsilon[_iMul];
-	while((pTout-pTin)>0.1){
-    pTin=pTout;
-    // //with Qmed
-    // nVal=QGratio*std::exp(std::pow(2.*_qcd->Nc()/(M_PI*b0),0.5)*(std::sqrt(std::log((pTin*_Rsize*pTin*_Rsize)/(_lambdaQCD*_lambdaQCD)))-std::sqrt(std::log((Qmed*Qmed)/(_lambdaQCD*_lambdaQCD)))));
-    // // _nMul=varLL*nVal; //LLA varLL with Qmed
-    // _nMul=varMLL*nVal*std::pow(std::log((Qmed*Qmed)/(_lambdaQCD*_lambdaQCD))/std::log((pTin*_Rsize*pTin*_Rsize)/(_lambdaQCD*_lambdaQCD)),a0); //MLLA varMLL with Qmed
-    //without Qmed
-    alphaS=1./(b0*std::log((pTin*_Rsize)*(pTin*_Rsize)/(_lambdaQCD*_lambdaQCD)));
-    // _nMul=QGratio*varLL*std::exp((1./b0)*std::pow(2.*_qcd->Nc()/(M_PI*alphaS),0.5)); //LLA c1
-    _nMul=QGratio*varMLL*std::exp((1./b0)*std::pow(2.*_qcd->Nc()/(M_PI*alphaS),0.5)+(1./4.+5.*_qcd->Nf()/(54.*M_PI*b0))*std::log(alphaS)); //MLLA c2
-    pTout=pT+_nMul*_epsilon[_iMul];
-    // std::cout << pT << " " << pTin << " " << pTout << " " << _nMul <<std::endl;
-  }
-}
-
-//Formula 5.51(P124) for LL and 7.34(P174) for MLL in [Basics of Perturbative QCD]
-void EnergyLoss::setMultiplicityBessel(const std::string &type, const double pT){
   double varLL=1.0;  //LL
   // double varMLL=0.24;  //MLL
   double QGratio=1.0;

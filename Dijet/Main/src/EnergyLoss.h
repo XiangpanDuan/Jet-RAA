@@ -73,8 +73,8 @@ class EnergyLoss: public DiJetLO{
   inline double getDepsilon() const {return _nDepsilon;}
   
   //Multiplicity in jet energy loss
+  // void setMultiplicity(const std::string &type, const double pT);
   void setMultiplicity(const std::string &type, const double pT);
-  void setMultiplicityBessel(const std::string &type, const double pT);
   inline double getMultiplicit() const {return _nMul;}
 
 };

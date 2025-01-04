@@ -36,7 +36,7 @@ void DiJetLOELoss::setEnergyLoss(const std::string &type, const double *range, c
     if(GLB==1) idim=6;                                     //with Glauber geometric effect
     setMul(idim,dim);                                      //initial and final integral dimension in jet energy loss
     setEpsilon(range);                                     //energy loss ε1,ε2,ε3,...,εn
-    if(MULTI==1) setMultiplicityBessel(type,range[0]);     //mean multiplicity
+    if(MULTI==1) setMultiplicity(type,range[0]);     //mean multiplicity
     setpT(range[0]);                                       //jet pT with energy loss
     if(GLB==1){
       if(TAUS==0){setOmegaC(range[3],range[4],range[5]);}  //OmegaC with initial time (tau0=0.6)
@@ -46,7 +46,7 @@ void DiJetLOELoss::setEnergyLoss(const std::string &type, const double *range, c
       }
     }
     if(MULTI==0){setDepsilon(type);}                       //primary energy loss with BDMPS D(ε1)
-    if(MULTI==1){setDepsilonGluonMean();}                  //mean-multi gluon energy loss when setMultiplicityBessel(type,range[0]) function is used before
+    if(MULTI==1){setDepsilonGluonMean();}                  //mean-multi gluon energy loss when setMultiplicity(type,range[0]) function is used before
     if(MULTI==2){
       setDepsilon(type);                                   //first  energy loss with BDMPS D(ε1)
       setDepsilonGluon();                                  //second energy loss to final energy loss with BDMPS D(ε2)*D(ε3)*...*D(εn)

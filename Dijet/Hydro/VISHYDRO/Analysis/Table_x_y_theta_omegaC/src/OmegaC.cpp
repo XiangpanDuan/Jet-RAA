@@ -7,25 +7,11 @@ OmegaC::OmegaC(){
   _xbin=(_xmax-_xmin)/(_xnum-1);
   _ybin=(_ymax-_ymin)/(_ynum-1);
   _taubin=0.1;
-  _qhat0=1.;
-  _Temp0=0.;
-  _TempC=0.;
-  _omegaC=0.;
-  _Temp.resize(_xnum, std::vector<std::vector<double>>(_ynum, std::vector<double>(_taunum, 0.0)));
-  setInitialData();
-}
-
-OmegaC::OmegaC(const double qhat0){
-  _xnum=301;_ynum=301;_taunum=201;_thetanum=36;
-  _xmin=-15.;_xmax=15.;_ymin=-15.;_ymax=15.;
-  _xbin=(_xmax-_xmin)/(_xnum-1);
-  _ybin=(_ymax-_ymin)/(_ynum-1);
-  _taubin=0.1;
-  _qhat0=qhat0;
-  _Temp0=0.;
-  _TempC=0.;
-  _omegaC=0.;
-  _Temp.resize(_xnum, std::vector<std::vector<double>>(_ynum, std::vector<double>(_taunum, 0.0)));
+  _qhat0=1.0;
+  _Temp0=0.0;
+  _Temp=0.0;
+  _omegaC=0.0;
+  _TempTable.resize(_xnum, std::vector<std::vector<double>>(_ynum, std::vector<double>(_taunum, 0.0)));
   setInitialData();
 }
 
@@ -38,14 +24,14 @@ void OmegaC::setInitialData(){
     for(int iy=0; iy<_ynum; iy++){
       for(int itau=0; itau<_taunum; itau++){
         InputFile >> x_val >> y_val >> tau_val >> temp_val;
-        _Temp[ix][iy][itau]=temp_val;
+        _TempTable[ix][iy][itau]=temp_val;
       }
     }
   }
   InputFile.close();
   int xhalf=(int)(std::floor(_xnum/2));
   int yhalf=(int)(std::floor(_ynum/2));
-  _Temp0=_Temp[xhalf][yhalf][6];  //T0: x=0, y=0, tau0=0.6
+  _Temp0=_TempTable[xhalf][yhalf][6];  //T0: x=0, y=0, tau0=0.6
   // std::cout << "Temp0 = " << _Temp0 << std::endl;
 }
 
@@ -68,36 +54,30 @@ bool OmegaC::HydroTempcut(const double temp){
   // if(temp>=tempcut) return true;
 }
 
-void OmegaC::setInputData(const double x, const double y, const double theta){
-  _x0=x;
-  _y0=y;
-  _theta=theta;
-}
-
-double OmegaC::TriInterpolation(const double xin, const double yin, const double tauin){
-  int xlow,xhigh,ylow,yhigh,taulow,tauhigh;
+double OmegaC::TriInterpolation(const double x, const double y, const double tau){
+  int    xlow,xhigh,ylow,yhigh,taulow,tauhigh;
   double dx,dy,dtau;
   double C,C0,C1,C00,C01,C10,C11,C000,C001,C010,C011,C100,C101,C110,C111;
-  xlow=(int)(std::floor(xin/_xbin)); xhigh=xlow+1;
-  ylow=(int)(std::floor(yin/_ybin)); yhigh=ylow+1;
-  taulow=(int)(std::floor(tauin/_taubin)); tauhigh=taulow+1;
+  xlow=(int)(std::floor(x/_xbin)); xhigh=xlow+1;
+  ylow=(int)(std::floor(y/_ybin)); yhigh=ylow+1;
+  taulow=(int)(std::floor(tau/_taubin)); tauhigh=taulow+1;
   if(xlow<(_xmin/_xbin) || xlow>=(_xmax/_xbin)) return 0.0;
   if(ylow<(_ymin/_ybin) || ylow>=(_ymax/_ybin)) return 0.0;
-  if(taulow>=_taunum) return 0.;
-  dx=(xin/_xbin-xlow)/(xhigh-xlow);
-  dy=(yin/_ybin-ylow)/(yhigh-ylow);
-  dtau=(tauin/_taubin-taulow)/(tauhigh-taulow);
+  if(taulow>=_taunum) return 0.0;
+  dx=(x/_xbin-xlow)/(xhigh-xlow);
+  dy=(y/_ybin-ylow)/(yhigh-ylow);
+  dtau=(tau/_taubin-taulow)/(tauhigh-taulow);
   //attention x and y range
   int xhalf=(int)(std::floor(_xnum/2));
   int yhalf=(int)(std::floor(_ynum/2));
-  C000=_Temp[xlow +xhalf][ylow +yhalf][taulow];
-  C001=_Temp[xlow +xhalf][ylow +yhalf][tauhigh];
-  C010=_Temp[xlow +xhalf][yhigh+yhalf][taulow];
-  C011=_Temp[xlow +xhalf][yhigh+yhalf][tauhigh];
-  C100=_Temp[xhigh+xhalf][ylow +yhalf][taulow];
-  C101=_Temp[xhigh+xhalf][ylow +yhalf][tauhigh];
-  C110=_Temp[xhigh+xhalf][yhigh+yhalf][taulow];
-  C111=_Temp[xhigh+xhalf][yhigh+yhalf][tauhigh];
+  C000=_TempTable[xlow +xhalf][ylow +yhalf][taulow];
+  C001=_TempTable[xlow +xhalf][ylow +yhalf][tauhigh];
+  C010=_TempTable[xlow +xhalf][yhigh+yhalf][taulow];
+  C011=_TempTable[xlow +xhalf][yhigh+yhalf][tauhigh];
+  C100=_TempTable[xhigh+xhalf][ylow +yhalf][taulow];
+  C101=_TempTable[xhigh+xhalf][ylow +yhalf][tauhigh];
+  C110=_TempTable[xhigh+xhalf][yhigh+yhalf][taulow];
+  C111=_TempTable[xhigh+xhalf][yhigh+yhalf][tauhigh];
   //interpolate along x axis
   C00=C000*(1.-dx)+C100*dx;
   C01=C001*(1.-dx)+C101*dx;
@@ -116,22 +96,21 @@ double OmegaC::TriInterpolation(const double xin, const double yin, const double
 
 //Temperature
 double OmegaC::Temperature(const double tau){
-  double TempC;
   _tau=tau;
   _x=_x0+_tau*std::cos(_theta);
   _y=_y0+_tau*std::sin(_theta);
-  TempC=TriInterpolation(_x,_y,_tau);
-  // std::cout << "_x=" << _x << " _y=" << _y << " TempC=" << TempC << std::endl;
-  return TempC;
+  double Temp=TriInterpolation(_x,_y,_tau);
+  // std::cout << "_x=" << _x << " _y=" << _y << " Temp=" << Temp << std::endl;
+  return Temp;
 }
 
 //OmegaC
 void OmegaC::setOmegaC(const double tau){
-  _omegaC=0.;
-  _TempC=0;
-  if(HydroTaucut(tau)==true) _TempC=Temperature(tau);
-  if(HydroTaucut(tau)==true && HydroTempcut(_TempC)==true){
-    _omegaC=_qhat0/std::pow(_Temp0,3)*std::pow(_TempC,3)*tau;  //actually _qhat0 = 1
+  _omegaC=0.0;
+  _Temp=0.0;
+  if(HydroTaucut(tau)==true) _Temp=Temperature(tau);
+  if(HydroTaucut(tau)==true && HydroTempcut(_Temp)==true){
+    _omegaC=_qhat0/std::pow(_Temp0,3)*std::pow(_Temp,3)*tau;  //actually _qhat0 = 1
   }
 }
 

@@ -17,11 +17,9 @@ namespace CalOmegaC{
   //------------------------------------------------------------
   void CalculateOmegaC(){
 
-    double qhat0=1.0;  //adjusted in the later calculations
-    OmegaC *MyOmegaC = new OmegaC(qhat0);
-    // // test
-    // MyOmegaC->TriInterpolation(0.25,0.2,0.6);
-    // MyOmegaC->TriInterpolation(0.25,0.2,6.6);
+    OmegaC *MyOmegaC = new OmegaC();
+    double qhat0=1.0;
+    MyOmegaC->setqhat0(qhat0);
 
     //Range of tau
     double taumin=0.6;
@@ -32,7 +30,7 @@ namespace CalOmegaC{
 
     int count=0;
     std::ofstream OutputFile;
-    OutputFile.open("../OutputFile/x_y_theta_omegaC.dat", std::ofstream::out);
+    OutputFile.open("../Output/x_y_theta_omegaC.dat", std::ofstream::out);
     int xnum=301,ynum=301,thetanum=36;
     double xmin=-15.,xmax=15.;
     double ymin=-15.,ymax=15.;
@@ -41,17 +39,14 @@ namespace CalOmegaC{
     double thetabin=2.*M_PI/thetanum;  //divide thetabin
     //Known conditions: ix,iy,itheta
     for(int ix=0; ix<xnum; ix++){
-      // if(ix%10!=0) continue;  //control OutputFile data format
       for(int iy=0; iy<ynum; iy++){
-        // if(iy%10!=0) continue;  //control OutputFile data format
         for(int itheta=0; itheta<thetanum; itheta++){
           
           double x=ix*xbin+xmin;
           double y=iy*ybin+ymin;
           double theta=itheta*thetabin;  //attention thetabin
           // double theta=(itheta+0.5)*thetabin;  //attention thetabin
-          MyOmegaC->setInputData(x,y,theta);  //set known table (x,y,theta)
-
+          MyOmegaC->setxytheta(x,y,theta);
         
           //Calculate the gluon frequency (OmagaC)
           double res=0.0, err=0.0;

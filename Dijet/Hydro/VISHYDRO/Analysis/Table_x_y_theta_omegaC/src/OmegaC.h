@@ -12,37 +12,41 @@ class OmegaC{
 
  private:
 
-  int _xnum,_ynum,_taunum,_thetanum;  //table size from 2+1D VisHydro (_xnum=nx,_ynum=ny,_taunum=ntau,_thetanum=ntheta)
+  int    _xnum,_ynum,_taunum,_thetanum;  //table size from 2+1D VisHydro
   double _xmin,_xmax;
   double _ymin,_ymax;
   double _xbin,_ybin,_taubin;
-  std::vector<std::vector<std::vector<double>>> _Temp;
-  double _Temp0;
-  double _TempC,_omegaC;
   double _x0,_y0,_tau;
   double _x,_y,_theta;
-  double _qhat0;  //BDMPS: 2-8 GeV^2/fm, High Twist or GLV: 0.3-1 GeV^2/fm
+  std::vector<std::vector<std::vector<double>>> _TempTable;
+  double _Temp0,_Temp;
+  double _omegaC;
+  double _qhat0;  //jet quenching parameter (BDMPS: 2-8 GeV^2/fm; High Twist or GLV: 0.3-1 GeV^2/fm)
 
   //Variables for QAG adaptive integration
   gsl_integration_workspace *_workspace;
   gsl_function _Fun;
-  double _rangemin, _rangemax;  //integration boundary
+  double _rangemin, _rangemax;
   
 
  public:
 
   OmegaC();
-  OmegaC(const double qhat0);
   ~OmegaC(){}
   void setInitialData();
 
-  bool   HydroTaucut (const double tau);
-  bool   HydroTempcut(const double temp);
-  void   setInputData(const double ix, const double iy, const double itheta);
-  double TriInterpolation(const double xfin, const double yfin, const double tauin);
+  //Hydro cut
+  bool HydroTaucut (const double tau);
+  bool HydroTempcut(const double temp);
+  //Input setting
+  inline void setqhat0(const double qhat0) {_qhat0=qhat0;}
+  inline void setxytheta(const double x0, const double y0, const double theta) {_x0=x0; _y0=y0; _theta=theta;}
+  //Temperature
+  double TriInterpolation(const double x, const double y, const double tau);
   double Temperature(const double tau);
-  void   setOmegaC(const double tau);
-  inline double getOmegaC() const {return _omegaC;};
+  //OmegaC
+  void setOmegaC(const double tau);
+  inline double getOmegaC() const {return _omegaC;}
 
   //QAG adaptive integration
   void setupQAG(double (*fun)(double, void *), double rangemin, double rangemax, void *para);

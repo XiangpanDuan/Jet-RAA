@@ -1,0 +1,52 @@
+------------------------------------------------------------
+Folder description
+------------------------------------------------------------
+1. VISHNew_Code folder is used to run the 2+1D Viscous Israel-Stewart Hydrodynamics and generate the medium profile.
+2. Analysis folder is used to provide the medium temperature information and calculate the jet quenching energy loss by the characteristic gluon radiation frequency (omegaC), which is described by BDMPS (arXiv:hep-ph/0106347 [hep-ph]).
+
+
+cd VISHNew/
+------------------------------------------------------------
+Parameter setting
+------------------------------------------------------------
+1. Check parameter setting in Vishydro.inp
+2. Enter the src folder and choose the output file in GNUmakefile: JetOutput-0.8.for in SRC (not Jetoutputh5.for, which need h5fc tool to deal with the data, and can't get the results/JetCtl.dat results/JetData.dat.)
+(Use the correct file JetOutput-0.8.for)
+(May one needs to install the hdf5 in the computer (Mac: brew install hdf5) and set the hdf5 path in GNUmakefile to link hydro code with HDF5 Library opt/homebrew/Cellar/hdf5/1.14.3_1/lib.)
+------------------------------------------------------------
+Run VISHNew
+------------------------------------------------------------
+1. chmod +x run.sh
+2. ./run.sh or bash run.sh
+Attention: copy initial data (entropy density) to Initial/ folder
+
+
+cd Analysis/
+------------------------------------------------------------
+Table_x_y_tau_temp folder provides the medium temperature information
+------------------------------------------------------------
+cd Table_x_y_tau_temp/src
+1. Check output file name in Calculate.for
+2. Copy JetOutput-0.8.for from 'VISHNew_Code' into current directory
+3. ./run.sh
+4. get the table x_y_tau_temp.dat and plot temperature distrubution at initial time (t=0.6)
+------------------------------------------------------------
+Table_x_y_theta_omegaC folder calculates the omegaC
+------------------------------------------------------------
+cd Table_x_y_theta_omegaC/src
+1. Check input initial file name and output file name
+2. make clean
+3. make
+4. ./Calculate or nohup ./Calculate &
+5. get the table x_y_theta_omegaC.dat
+
+
+cd Analysis/Table_Fortran/
+------------------------------------------------------------
+Calculate the omegaC
+------------------------------------------------------------
+cd src
+1. Check output file name in Calculate.for
+2. Copy JetOutput-0.8.for from 'VISHNew_Code' into current directory
+3. ./run.sh
+4. get the table x_y_theta_omegaC.dat

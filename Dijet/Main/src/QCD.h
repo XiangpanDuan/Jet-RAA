@@ -13,13 +13,14 @@ class QCD{
 
  private:
 
-  LHAPDF::PDF *_pdf;  //download LHAPDF from https://lhapdf.hepforge.org/install.html
+  LHAPDF::PDF *_pdf;               //download LHAPDF from https://lhapdf.hepforge.org/install.html
   Particle *_Z0;
-  unsigned int _nf;   //flavors of quarks, 3 by default
+  unsigned int _nf;                //flavors of quarks, 3 by default
   double _lambdaQCD;
   double _TF;
-  double _Nc,_CF;     //number of colors
-  double _beta0,_beta1,_beta2,_gcusp0,_gcusp1,_gcusp2;  //_gcusp=gamma^cusp
+  double _Nc,_CF;                  //number of colors
+  double _beta0,_beta1,_beta2;     //beta function coefficient
+  double _gcusp0,_gcusp1,_gcusp2;  //_gcusp=gamma^cusp
   double _gHq0,_gHg0,_gHq1,_gHg1;  //non-cusp anomalous dims for the hard function
 
 
@@ -37,9 +38,9 @@ class QCD{
   inline double Nc() const {return _Nc;}
   inline double CF() const {return _CF;}
   
-  //PDF and Λ_QCD
-  inline double pdf(const int f, const double x, const double Q) const {return _pdf->xfxQ(f,x,Q)/x;}  //PDF as a function of flavor, x and Q
-  inline double alphas(const double Q) const {return _pdf->alphasQ(Q);}  //the strong coupling alpha_s as a function of Q
+  //PDF, alphas, and Λ_QCD
+  inline double pdf(const int f, const double x, const double Q) const {return _pdf->xfxQ(f,x,Q)/x;}  //PDF as a function of flavor with momentum fraction x and factorization scale Q
+  inline double alphas(const double Q) const {return _pdf->alphasQ(Q);}                               //strong coupling constant alphas as a function of Q
   double f2loop(const double t, const double b0, const double b1);
   double df2loop(const double t, const double b0, const double b1);
   double LambdaQCD(const unsigned int nloop);

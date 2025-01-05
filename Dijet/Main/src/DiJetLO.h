@@ -18,16 +18,17 @@ class DiJetLO{
  private:
  
   Particle *_parton;
-  unsigned int _nf;     //flavors of quarks, 3 by default
-  double _preXsection;  //prefactor for calculting cross secton
-  double _Ecm;          //_Ecm=sqrt{_s} in CoM frame
-  double _s;            //collisional energy square
-  double _mP2;          //parton mass square
-  double _unitGeV2pb;   //GeV^2 pb from PDG 2024
-  double _x1,_x2,_yTrig3,_yAsso4,_shat,_that,_uhat;  //kinematics for a scattering process
-  double _pdf1aplus[30],_pdf1aminus[30];             //PDF with x1
-  double _pdf2bplus[30],_pdf2bminus[30];             //PDF with x2
-  double _Dz3c[30],_Dz4d[30];                        //JFF for different parton numbering scheme
+  unsigned int _nf;                       //flavors of quarks, 3 by default
+  double _preXsection;                    //prefactor for calculating cross secton
+  double _Ecm;                            //_Ecm=sqrt{_s} in CoM frame
+  double _s;                              //collisional energy square
+  double _mP2;                            //parton mass square
+  double _unitGeV2pb;                     //GeV^2 pb from PDG 2024
+  double _yTrig3,_yAsso4;                 //rapidity of final jet
+  double _x1,_x2,_shat,_that,_uhat;       //kinematics for hard scattering
+  double _pdf1aplus[30],_pdf1aminus[30];  //PDF with momentum fraction x1
+  double _pdf2bplus[30],_pdf2bminus[30];  //PDF with momentum fraction x2
+  double _Dz3c[30],_Dz4d[30];             //JFF for different parton numbering scheme
 
   //Variables for Monte Carlo
   const gsl_rng_type *_Type;
@@ -45,8 +46,8 @@ class DiJetLO{
  protected:
 
   QCD *_qcd;
-  double _lambdaQCD;    //0.25 for _nf=3, lambdaQCD depends on quark flavour _nf
-  double _pT,_pTscale;  //jet momentum and scale to control the errer bar
+  double _lambdaQCD;    //Λ_QCD depends on quark flavour _nf
+  double _pT,_pTscale;  //initial jet momentum and scale to control the errer bar
 
 
  public:
@@ -63,11 +64,11 @@ class DiJetLO{
   void setLambdaQCD(const unsigned int nloop);
 
   //Kinematic calculations
-  void MomentumFractions(const double yTrig3, const double yAsso4);  //calculate Bjorken x's from Ecm, pT and the rapidities of the two produced particles
+  void MomentumFractions(const double yTrig3, const double yAsso4);
   void Mandelstam(const double yTrig3, const double yAsso4);
   void setKinematics(const double yTrig3, const double yAsso4);
   void getKinematics();
-  void getFourMomenta();  //four momenta of the incoming partons and outgoing particles
+  void getFourMomenta();
   
   //Kinematic cuts
   inline bool KinematicsQcut() const {return _x1>0.0 && _x1<1.0 && _x2>0.0 && _x2<1.0;}  //return whether it is allowed kinematics

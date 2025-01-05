@@ -135,18 +135,18 @@ void EnergyLoss::setOmegaCTable(){
 //Trilinear interpolation to get omegaC
 bool EnergyLoss::setOmegaC(const double x, const double y, const double theta){
   _omegaC=0.0;
-  int xlow,xhigh,ylow,yhigh,thetalow,thetahigh;
+  int    xlow,xhigh,ylow,yhigh,thetalow,thetahigh;
   double xbin,ybin,thetabin;
   double C,C0,C1,C00,C01,C10,C11,C000,C001,C010,C011,C100,C101,C110,C111;
   xbin=(_xmax-_xmin)/(_xnum-1);
   ybin=(_ymax-_ymin)/(_ynum-1);
-  thetabin=2.*M_PI/_thetanum;     //divide dtheta
-  xlow=(int)(std::floor(x/xbin)); xhigh=xlow+1;
-  ylow=(int)(std::floor(y/ybin)); yhigh=ylow+1;
-  thetalow=(int)(std::floor(theta/thetabin)); thetahigh=thetalow+1;
-  if(thetalow==(_thetanum-1)) {thetahigh=0;}           //attention location angle = 0, 2PI
-  if(thetalow==_thetanum) {thetalow=0; thetahigh=1;}   //attention location angle = 0, 2PI
-  if(thetalow>_thetanum) return false;
+  thetabin=2.*M_PI/_thetanum;
+  xlow=(int)(std::floor(x/xbin));  xhigh=xlow+1;
+  ylow=(int)(std::floor(y/ybin));  yhigh=ylow+1;
+  thetalow=(int)(std::floor(theta/thetabin));  thetahigh=thetalow+1;
+  if(thetalow==(_thetanum-1)) {thetahigh=0;}            //attention location angle = 0, 2PI
+  if(thetalow==_thetanum) {thetalow=0;  thetahigh=1;}   //attention location angle = 0, 2PI
+  if(thetalow>_thetanum)  return false;
   if(xlow<_xmin/xbin || xlow>=_xmax/xbin) return false;
   if(ylow<_ymin/ybin || ylow>=_ymax/ybin) return false;
   double dx=(x/xbin-xlow)/1.;  //double dx=(x/xbin-xlow)/(xhigh-xlow);
@@ -208,8 +208,7 @@ void EnergyLoss::setDepsilon(const std::string &type){
   //First energy loss
   _Depsilon[_iMul]=1./_epsilon[_iMul]*std::sqrt(alpha*alpha*omegaC/(2.*_epsilon[_iMul]))*std::exp(-M_PI*alpha*alpha*omegaC/(2.*_epsilon[_iMul]));
   _nDepsilon*=_Depsilon[_iMul];
-  // std::cout << _epsilon << " " << CR << " " << alphaS << " " << alpha << " " << _Depsilon << std::endl;
-  // std::cout << type << " " << _Depsilon[_iMul] << " " << _nDepsilon << std::endl;
+  // std::cout << type << " " << alphaS << " " << _Depsilon[_iMul] << " " << _nDepsilon << std::endl;
 }
 
 //Multi-gluons jet energy loss
@@ -227,7 +226,7 @@ void EnergyLoss::setDepsilonGluon(){
   }
 }
 
-//Multi-gluons jet energy loss with same energy loss
+//Multi-gluons jet mean energy loss
 void EnergyLoss::setDepsilonGluonMean(){
   double CR=_qcd->Nc();                  //gluon
   double QGratio=_qcd->Nc()/_qcd->CF();  //gluon
@@ -236,10 +235,9 @@ void EnergyLoss::setDepsilonGluonMean(){
   double omegaC=QGratio*_omegaC;
   _Depsilon.resize(_fMul,1.0);
   _nDepsilon=1.0;
-  //Same one energy loss
+  //Mean energy loss
   _Depsilon[_iMul]=1./_epsilon[_iMul]*std::sqrt(alpha*alpha*omegaC/(2.*_epsilon[_iMul]))*std::exp(-M_PI*alpha*alpha*omegaC/(2.*_epsilon[_iMul]));
   _nDepsilon*=_Depsilon[_iMul];
-
 }
 
 
@@ -313,7 +311,7 @@ void EnergyLoss::setMultiplicity(const std::string &type, const double pT){
   double pTout=pT+_nMul*_epsilon[_iMul];
   while((pTout-pTin)>0.1){
     pTin=pTout;
-    Q=pTin*_Rsize;  //R dependence
+    Q=pTin*_Rsize;
     ypT=std::log(Q/Qmed);
     lambdapT=std::log(Qmed/_lambdaQCD);
     YpT=ypT+lambdapT;

@@ -13,9 +13,9 @@ class ElectroWeak{
   // double _mHiggs;  //Higgs boson mass in GeV
   // // double _GF;   //G_F in GeV^{-2}
 
-  double _cw2;     //cos(theta_W)^2
-  double _sw2;     //sin(theta_W)^2
-  double _alpha;   //electromagnetic alpha
+  double _cw2;    //cos(theta_W)^2
+  double _sw2;    //sin(theta_W)^2
+  double _alpha;  //electromagnetic alpha
 
 
  public:

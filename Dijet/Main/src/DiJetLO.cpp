@@ -47,8 +47,8 @@ void DiJetLO::setLambdaQCD(const unsigned int nloop){
 
 
 //####################################################################################################
-//Kinematics calculation
-//In 248 pages of [QCD and Collider Physics]
+//Kinematics calculation in 248-250 pages of [QCD and Collider Physics]
+//Calculate Bjorken x's from Ecm, pT and the rapidities of the two produced particles
 void DiJetLO::MomentumFractions(const double yTrig3, const double yAsso4){
   //Massless partons
   double xT=2.*_pT/std::sqrt(_s);
@@ -62,7 +62,7 @@ void DiJetLO::MomentumFractions(const double yTrig3, const double yAsso4){
   // _x2=(1./std::sqrt(_s))*(mT3*std::exp(-yTrig3)+mT4*std::exp(-yAsso4));
 }
 
-//In 250 pages of [QCD and Collider Physics]
+//Mandelstam variables
 void DiJetLO::Mandelstam(const double yTrig3, const double yAsso4){
   //satisfy s+t+u=m1^2+m2^2+m3^2+m4^2=0 for massless partons
   _shat= _x1*_x2*_s;
@@ -88,6 +88,7 @@ void DiJetLO::getKinematics(){
   std::cout << std::setprecision(16) << "x1=" << _x1 << ", x2=" << _x2 << ", s=" << _shat << ", t=" << _that << ", u=" << _uhat << ", s+t+u=" << _shat+_that+_uhat << std::endl;
 }
 
+//Four momenta of the incoming partons and outgoing particles
 void DiJetLO::getFourMomenta(){
   //Four-momentum of incoming and outgoing particles
   //mT=sqrt(_parton->Mass()*_parton->Mass()+_pT*_pT),

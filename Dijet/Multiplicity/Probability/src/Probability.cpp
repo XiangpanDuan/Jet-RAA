@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <iomanip>
+#include <string>
 #include <vector>
 #include <cmath>
 #include <gsl/gsl_integration.h>
@@ -31,8 +31,8 @@ double PSum,nMul;
 
 //------------------------------------------------------------
 int Factorial(const int n){
-    if(n<=1) return 1;        //0!=1, 1!=1
-    return n*Factorial(n-1);  //n!
+  if(n<=1) return 1;        //0!=1, 1!=1
+  return n*Factorial(n-1);  //n!
 }
 
 //------------------------------------------------------------

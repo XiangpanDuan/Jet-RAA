@@ -26,10 +26,10 @@ int main()
   int    Nc=3;
   double LambdaQCD=0.245748;  //keep consistent with the _lambdaQCD value in the Main/src/QCD.cpp
   double Rsize=0.4;
-	double a=11./3.*Nc+2.*nf/(3.*Nc*Nc);
-	double b=11./3.*Nc-2./3.*nf;
-	double A=std::sqrt(16.*Nc/b);
-	double B=a/b;
+  double a=11./3.*Nc+2.*nf/(3.*Nc*Nc);
+  double b=11./3.*Nc-2./3.*nf;
+  double A=std::sqrt(16.*Nc/b);
+  double B=a/b;
   double ypT,lambdapT,YpT;
   double x1,x2;
   double Multi_Q,Multi_G;
@@ -41,12 +41,12 @@ int main()
   double pT,Q;
   double pTmin=50.,pTbin=10.;
   int    pTnum=100;
-	for(int i=0; i<pTnum; i++){
+  for(int i=0; i<pTnum; i++){
     pT=pTmin+i*pTbin;
-	  Q=pT*Rsize;  //R dependence
-		ypT=std::log(Q/Qmed);
-		lambdapT=std::log(Qmed/LambdaQCD);
-		YpT=ypT+lambdapT;
+    Q=pT*Rsize;  //R dependence
+    ypT=std::log(Q/Qmed);
+    lambdapT=std::log(Qmed/LambdaQCD);
+    YpT=ypT+lambdapT;
     x1=A*std::sqrt(YpT);
     x2=A*std::sqrt(lambdapT);
     if(mode==0){

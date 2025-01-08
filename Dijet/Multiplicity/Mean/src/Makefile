@@ -19,4 +19,3 @@ $(TARGET): MeanMulti.o
 
 clean:
 	rm -f *.o *.*~ *.exe
-

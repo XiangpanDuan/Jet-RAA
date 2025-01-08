@@ -7,7 +7,7 @@ IGSL = -I/Users/duanpanpan/Desktop/Work/Model/GSL/gsl-install/include
 LGSL = -L/Users/duanpanpan/Desktop/Work/Model/GSL/gsl-install/lib -lgsl -lgslcblas -lm
 
 
-TARGET = Analysis.exe
+TARGET = Probability.exe
 all: $(TARGET)
 
 Probability.o: Probability.cpp
@@ -19,4 +19,3 @@ $(TARGET): Probability.o
 
 clean:
 	rm -f *.o *.*~ *.exe
-

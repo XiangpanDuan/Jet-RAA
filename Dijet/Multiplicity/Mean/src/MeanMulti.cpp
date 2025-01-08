@@ -7,12 +7,11 @@
 #include <gsl/gsl_sf_bessel.h>
 
 
-//The mean multiplicity in jet energy losss
+//Mean multiplicity in jet energy losss
 //Formula 5.51(P124) for LLA and 7.34(P174) for MLLA in [Basics of Perturbative QCD]
-//Multiplicity by Bessel function in 124 pages of [Basics of Perturbative QCD]
 int main()
 {
-  double Qmed=10.;  //medium scale
+  double Qmed=35.;  //medium scale
   int    mode=0;    //0:LL; 1:MLL
   std::stringstream ss;
   if(mode==0) ss << "../Output/MultiLL_Qmed"  << Qmed << ".dat";
@@ -60,6 +59,28 @@ int main()
     OutputFile << pT << " " << Multi_Q << " " << Multi_G << std::endl;
   }
   OutputFile.close();
+
+
+  // //
+  // double TR=0.5;
+  // double b0=(11.*Nc-4.*nf*TR)/(12.*M_PI);
+  // double a0=1./4.+5.*nf/(54.*M_PI*b0);
+  // double varLL=0.016965;    //LLA  from pythia8 simulation
+  // double varMLL=0.0403164;  //MLLA from pythia8 simulation
+  // for(int i=0; i<pTnum; i++){
+  //   pT=pTmin+i*pTbin;
+  //   Q=pT*Rsize;
+  //   double alphaS=1./(b0*std::log(Q*Q/(LambdaQCD*LambdaQCD)));
+  //   if(mode==0){
+  //     Multi_Q=QGratio_Q*varLL*std::exp(std::pow(2.*Nc/(M_PI*b0)*std::log(Q*Q/(LambdaQCD*LambdaQCD)),0.5));  //LLA
+  //     Multi_G=QGratio_G*varLL*std::exp(std::pow(2.*Nc/(M_PI*b0)*std::log(Q*Q/(LambdaQCD*LambdaQCD)),0.5));  //LLA
+  //   }
+  //   if(mode==1){
+  //     Multi_Q=QGratio_Q*varMLL*std::exp(std::pow(2.*Nc/(M_PI*b0)*std::log(Q*Q/(LambdaQCD*LambdaQCD)),0.5)+a0*std::log(alphaS));  //MLLA
+  //     Multi_G=QGratio_G*varMLL*std::exp(std::pow(2.*Nc/(M_PI*b0)*std::log(Q*Q/(LambdaQCD*LambdaQCD)),0.5)+a0*std::log(alphaS));  //MLLA
+  //   }
+  // }
+
 
   return 0;
 }

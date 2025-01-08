@@ -20,7 +20,7 @@ std::vector<std::vector<std::vector<double>>> SuTable(pTnum, std::vector<std::ve
 double Pval=0.0;
 int    ival,jval;
 double Rsize=0.4;
-double Qmed=19.9;  //25->10
+double Qmed=39.99;  //medium scale
 double LambdaQCD=0.245748;  //keep consistent with the _lambdaQCD value in the Main/src/QCD.cpp
 double lambda=std::log(Qmed/LambdaQCD);
 unsigned int Nc=3;

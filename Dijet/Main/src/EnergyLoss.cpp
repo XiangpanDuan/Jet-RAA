@@ -141,9 +141,9 @@ bool EnergyLoss::setOmegaC(const double x, const double y, const double theta){
   xbin=(_xmax-_xmin)/(_xnum-1);
   ybin=(_ymax-_ymin)/(_ynum-1);
   thetabin=2.*M_PI/_thetanum;
-  xlow=(int)(std::floor(x/xbin));  xhigh=xlow+1;
-  ylow=(int)(std::floor(y/ybin));  yhigh=ylow+1;
-  thetalow=(int)(std::floor(theta/thetabin));  thetahigh=thetalow+1;
+  xlow=(int)(std::floor(x/xbin)); xhigh=xlow+1;
+  ylow=(int)(std::floor(y/ybin)); yhigh=ylow+1;
+  thetalow=(int)(std::floor(theta/thetabin)); thetahigh=thetalow+1;
   if(thetalow==(_thetanum-1)) {thetahigh=0;}            //attention location angle = 0, 2PI
   if(thetalow==_thetanum) {thetalow=0;  thetahigh=1;}   //attention location angle = 0, 2PI
   if(thetalow>_thetanum)  return false;
@@ -250,7 +250,7 @@ void EnergyLoss::setDepsilonGluonMean(){
 //   if(type=="gluon") QGratio=1.6;  //gluon
 //   double TR=_qcd->TF();
 //   double b0=(11.*_qcd->Nc()-4.*_qcd->Nf()*TR)/(12.*M_PI);
-//   // double a0=1./4.+5.*_qcd->Nf()/(54.*M_PI*b0);
+//   double a0=1./4.+5.*_qcd->Nf()/(54.*M_PI*b0);
 //   // double varLL=0.016965;  //LLA  from pythia8 simulation
 //   double varMLL=0.0403164; //MLLA from pythia8 simulation
 //   // //Multiplicity
@@ -263,7 +263,7 @@ void EnergyLoss::setDepsilonGluonMean(){
 //   //without Qmed
 //   double alphaS=1./(b0*std::log((pT*_Rsize)*(pT*_Rsize)/(_lambdaQCD*_lambdaQCD)));
 //   // _nMul=QGratio*varLL*std::exp((1./b0)*std::pow(2.*_qcd->Nc()/(M_PI*alphaS),0.5)); //LLA c1
-//   _nMul=QGratio*varMLL*std::exp((1./b0)*std::pow(2.*_qcd->Nc()/(M_PI*alphaS),0.5)+(1./4.+5.*_qcd->Nf()/(54.*M_PI*b0))*std::log(alphaS)); //MLLA c2
+//   _nMul=QGratio*varMLL*std::exp((1./b0)*std::pow(2.*_qcd->Nc()/(M_PI*alphaS),0.5)+a0*std::log(alphaS)); //MLLA c2
 
 //   //Get initial pT
 //   double pTin=pT;
@@ -277,7 +277,7 @@ void EnergyLoss::setDepsilonGluonMean(){
 //     //without Qmed
 //     alphaS=1./(b0*std::log((pTin*_Rsize)*(pTin*_Rsize)/(_lambdaQCD*_lambdaQCD)));
 //     // _nMul=QGratio*varLL*std::exp((1./b0)*std::pow(2.*_qcd->Nc()/(M_PI*alphaS),0.5)); //LLA c1
-//     _nMul=QGratio*varMLL*std::exp((1./b0)*std::pow(2.*_qcd->Nc()/(M_PI*alphaS),0.5)+(1./4.+5.*_qcd->Nf()/(54.*M_PI*b0))*std::log(alphaS)); //MLLA c2
+//     _nMul=QGratio*varMLL*std::exp((1./b0)*std::pow(2.*_qcd->Nc()/(M_PI*alphaS),0.5)+a0*std::log(alphaS)); //MLLA c2
 //     pTout=pT+_nMul*_epsilon[_iMul];
 //     // std::cout << pT << " " << pTin << " " << pTout << " " << _nMul <<std::endl;
 //   }
@@ -290,12 +290,11 @@ void EnergyLoss::setMultiplicity(const std::string &type, const double pT){
   double QGratio=1.0;
   if(type=="quark") QGratio=1.0;  //quark
   if(type=="gluon") QGratio=1.6;  //gluon
-  double a=11./3.*_qcd->Nc()+2.*_qcd->Nf()/(3.*_qcd->Nc()*_qcd->Nc());
+  // double a=11./3.*_qcd->Nc()+2.*_qcd->Nf()/(3.*_qcd->Nc()*_qcd->Nc());  //for MLL
   double b=11./3.*_qcd->Nc()-2./3.*_qcd->Nf();
   double A=std::sqrt(16.*_qcd->Nc()/b);
-  double B=a/b;
-  // double Qmed=_lambdaQCD+1e-10;  //medium scale
-  double Qmed=_Qmed;   //medium scale in Multiplicity, Qmed=0.5 (default)
+  // double B=a/b;     //for MLL
+  double Qmed=_Qmed;   //medium scale in Multiplicity, Qmed=0.5 (default), Qmed=_lambdaQCD+1e-10
   double Q=pT*_Rsize;  //R dependence
   double ypT=std::log(Q/Qmed);
   double lambdapT=std::log(Qmed/_lambdaQCD);

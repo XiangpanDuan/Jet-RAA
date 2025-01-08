@@ -15,11 +15,11 @@ class EnergyLossOmegaC{
   double _xmin,_xmax;
   double _ymin,_ymax;
   double _xbin,_ybin,_taubin;
-  std::vector<std::vector<std::vector<double>>> _TempTable;
-  double _Temp0;
-  double _TempC,_omegaC;
   double _x0,_y0,_tau;
   double _x,_y,_theta;
+  std::vector<std::vector<std::vector<double>>> _TempTable;
+  double _Temp0,_Temp;
+  double _omegaC;
 
 
  public:
@@ -32,17 +32,17 @@ class EnergyLossOmegaC{
   bool HydroTempcut(const double temp);
   //Temperature table
   inline void setTemp0(const double temp0) {_Temp0=temp0;}
-  inline void setTemp(const double ix, const double iy, const double itau, const double temp) {_TempTable[ix][iy][itau]=temp;}
+  inline void setTemp(const int ix, const int iy, const int itau, const double temp) {_TempTable[ix][iy][itau]=temp;}
   //Temperature
-  inline void setxytheta(const double x0, const double y0, const double theta) {_x0=x0;_y0=y0;_theta=theta;}
-  double TriInterpolation(const double xin, const double yin, const double tauin);
+  inline void setxytheta(const double x0, const double y0, const double theta) {_x0=x0; _y0=y0; _theta=theta;}
+  double TriInterpolation(const double x, const double y, const double tau);
   double Temperature(const double tau);
   //OmegaC
   void setOmegaC(const double tau);
   inline double getOmegaC() const {return _omegaC;}
   
   
-  //Integration function must keep in class with static member function
+  //Integration function must keeps in class with static member function
   static double FunctionOmegaC(double tau, void *params){
     EnergyLossOmegaC *param = (EnergyLossOmegaC*) params;
     param->setOmegaC(tau);

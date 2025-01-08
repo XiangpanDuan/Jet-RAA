@@ -9,7 +9,7 @@ EnergyLossOmegaC::EnergyLossOmegaC(){
   _ybin=(_ymax-_ymin)/(_ynum-1);
   _taubin=0.1;
   _Temp0=0.0;
-  _TempC=0.0;
+  _Temp=0.0;
   _omegaC=0.0;
   _TempTable.resize(_xnum, std::vector<std::vector<double>>(_ynum, std::vector<double>(_taunum, 0.0)));
 }
@@ -32,23 +32,23 @@ bool EnergyLossOmegaC::HydroTempcut(const double temp){
 
 //####################################################################################################
 //Trilinear interpolation to get temperature
-double EnergyLossOmegaC::TriInterpolation(const double xin, const double yin, const double tauin){
-  int xlow,xhigh,ylow,yhigh,taulow,tauhigh;
+double EnergyLossOmegaC::TriInterpolation(const double x, const double y, const double tau){
+  int    xlow,xhigh,ylow,yhigh,taulow,tauhigh;
   double dx,dy,dtau;
   double C,C0,C1,C00,C01,C10,C11,C000,C001,C010,C011,C100,C101,C110,C111;
-  xlow=(int)(std::floor(xin/_xbin)); xhigh=xlow+1;
-  ylow=(int)(std::floor(yin/_ybin)); yhigh=ylow+1;
-  taulow=(int)(std::floor(tauin/_taubin)); tauhigh=taulow+1;  //attention
+  xlow=(int)(std::floor(x/_xbin)); xhigh=xlow+1;
+  ylow=(int)(std::floor(y/_ybin)); yhigh=ylow+1;
+  taulow=(int)(std::floor(tau/_taubin)); tauhigh=taulow+1;
   if(xlow<(_xmin/_xbin) || xlow>=(_xmax/_xbin)) return 0.0;
   if(ylow<(_ymin/_ybin) || ylow>=(_ymax/_ybin)) return 0.0;
   if(taulow>=_taunum) return 0.0;
-  dx=(xin/_xbin-xlow)/(xhigh-xlow);
-  dy=(yin/_ybin-ylow)/(yhigh-ylow);
-  dtau=(tauin/_taubin-taulow)/(tauhigh-taulow);  //attention
+  dx=(x/_xbin-xlow)/(xhigh-xlow);
+  dy=(y/_ybin-ylow)/(yhigh-ylow);
+  dtau=(tau/_taubin-taulow)/(tauhigh-taulow);
   //Attention x and y range
   int xhalf=(int)(std::floor(_xnum/2));
   int yhalf=(int)(std::floor(_ynum/2));
-  C000=_TempTable[xlow +xhalf][ylow +yhalf][taulow];  //get real lacation temperature
+  C000=_TempTable[xlow +xhalf][ylow +yhalf][taulow];
   C001=_TempTable[xlow +xhalf][ylow +yhalf][tauhigh];
   C010=_TempTable[xlow +xhalf][yhigh+yhalf][taulow];
   C011=_TempTable[xlow +xhalf][yhigh+yhalf][tauhigh];
@@ -80,9 +80,9 @@ double EnergyLossOmegaC::Temperature(const double tau){
   _tau=tau;
   _x=_x0+_tau*std::cos(_theta);
   _y=_y0+_tau*std::sin(_theta);
-  double TempC=TriInterpolation(_x,_y,_tau);
-  // std::cout << _x0 << " " << _y0 << " " << _theta << " " << _x << " " << _y << " " << _tau << " " << TempC << std::endl;
-  return TempC;
+  double Temp=TriInterpolation(_x,_y,_tau);
+  // std::cout << _x0 << " " << _y0 << " " << _theta << " " << _x << " " << _y << " " << _tau << " " << Temp << std::endl;
+  return Temp;
 }
 
 
@@ -90,10 +90,10 @@ double EnergyLossOmegaC::Temperature(const double tau){
 //OmegaC
 void EnergyLossOmegaC::setOmegaC(const double tau){
   _omegaC=0.0;
-  _TempC=0.0;
-  if(HydroTaucut(tau)==true) _TempC=Temperature(tau);
-  if(HydroTaucut(tau)==true && HydroTempcut(_TempC)==true){
+  _Temp=0.0;
+  if(HydroTaucut(tau)==true) _Temp=Temperature(tau);
+  if(HydroTaucut(tau)==true && HydroTempcut(_Temp)==true){
     double qhat0=1.0;
-    _omegaC=qhat0/std::pow(_Temp0,3)*std::pow(_TempC,3)*tau;
+    _omegaC=qhat0/std::pow(_Temp0,3)*std::pow(_Temp,3)*tau;
   }
 }

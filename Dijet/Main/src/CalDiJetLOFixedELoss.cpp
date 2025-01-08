@@ -53,7 +53,7 @@ namespace CalDiJetLOFixedELoss{
           if(MULTI==1) ss[i][j] << "../Output/PbPbFixed/Test_dsigma_dpTdy_" << Input::Ecm << "GeV_omegaC" << Input::omegaC << "_multi_Qmed" << Input::Qmed << "_type" << i << ".dat";
         }
         if(nEloss!=1){
-          if(MULTI==2) ss[i][j] << "../Output/PbPbFixed/Probability/Test_dsigma_dpTdy_" << Input::Ecm << "GeV_omegaC" << Input::omegaC << "_probability_type" << i << j << ".dat";
+          if(MULTI==2) ss[i][j] << "../Output/PbPbFixed/Probability/dsigma_dpTdy_" << Input::Ecm << "GeV_omegaC" << Input::omegaC << "_probability_type" << i << j << ".dat";
         }
         OutputFile[i][j]=ss[i][j].str();
         OutStream[i][j].open(OutputFile[i][j], std::ofstream::out);

@@ -1,7 +1,7 @@
 #include <string>
 #include <cmath>
 
-#define  MODE   1                    //0:pp collisions; 1:AA collisions
+#define  MODE   0                    //0:pp collisions; 1:AA collisions
 #define  GLB    0                    //0:turn off Glauber model; 1:turn on Glauber model
 #define  MULTI  0                    //0:turn off multiplicity; 1:turn on mean multiplicity; 2:turn on multiplicity with probability distribution
 #define  TAUS   0                    //0:turn off start time (default tau0=0.6); 0:turn on start time with qhat and jet pT dependences
@@ -47,16 +47,16 @@ const double thetamax=2.*M_PI;
 #if   MODE == 1
 const double Rsize=0.4;              //jet cone size
 const double alphaSmed=0.2;          //medium scale in BDMPS
-const double Qmed=10.;               //medium scale in Multiplicity
-#if   MULTI != 2 
+const double Qmed=15.;               //medium scale in Multiplicity, used in MULTI=1
+#if   MULTI != 2
 const int    nEloss=1;               //numbers of energy loss
 #elif MULTI == 2
 const int    nEloss=10;              //numbers of energy loss
 #endif
 #if   GLB == 0
-const double omegaC=14.;             //GeV; fixed energy loss in BDMPS; 14.:MULTI=0; (4.5,4.3,4.0,2.6):MULTI=1; (15,12,10):MULTI=2 
+const double omegaC=6.5;             //GeV; fixed energy loss in BDMPS; 14.:MULTI=0; (4.5,4.3,4.0,2.6):MULTI=1; (15,12,10):MULTI=2 
 #elif GLB == 1
-const double qhat0 =1.0;             //GeV/fm^2; 6.6:MULTI=0; 1.2:MULTI=1; ???:MULTI=2
+const double qhat0=2.5;              //GeV/fm^2; 6.7:MULTI=0; 1.2:MULTI=1; ???:MULTI=2
 #endif
 #endif
 

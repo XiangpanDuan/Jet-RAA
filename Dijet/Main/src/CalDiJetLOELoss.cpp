@@ -53,14 +53,14 @@ namespace CalDiJetLOELoss{
     for(int i=0; i<3; i++){
       for(int j=0; j<nEloss; j++){
         if(nEloss==1){
-          if(MULTI==0 && TAUS==0) ss[i][j] << "../Output/PbPb_Test/dsigma_dpTdy_" << Input::Ecm << "GeV_qhat" << Input::qhat0 << "_single_type" << i << ".dat";
-          if(MULTI==1 && TAUS==0) ss[i][j] << "../Output/PbPb_Test/dsigma_dpTdy_" << Input::Ecm << "GeV_qhat" << Input::qhat0 << "_multip_type" << i << ".dat";
-          if(MULTI==0 && TAUS==1) ss[i][j] << "../Output/PbPb_Test/dsigma_dpTdy_" << Input::Ecm << "GeV_qhat" << Input::qhat0 << "_tau_single_type" << i << ".dat";
-          if(MULTI==1 && TAUS==1) ss[i][j] << "../Output/PbPb_Test/dsigma_dpTdy_" << Input::Ecm << "GeV_qhat" << Input::qhat0 << "_tau_multip_type" << i << ".dat";
+          if(MULTI==0 && TAUS==0) ss[i][j] << "../Output/PbPb/dsigma_dpTdy_" << Input::Ecm << "GeV_qhat" << Input::qhat0 << "_single_type" << i << ".dat";
+          if(MULTI==1 && TAUS==0) ss[i][j] << "../Output/PbPb/dsigma_dpTdy_" << Input::Ecm << "GeV_qhat" << Input::qhat0 << "_multi_Qmed"  << Input::Qmed << "_type" << i << ".dat";
+          if(MULTI==0 && TAUS==1) ss[i][j] << "../Output/PbPb/dsigma_dpTdy_" << Input::Ecm << "GeV_qhat" << Input::qhat0 << "_tau_single_type" << i << ".dat";
+          if(MULTI==1 && TAUS==1) ss[i][j] << "../Output/PbPb/dsigma_dpTdy_" << Input::Ecm << "GeV_qhat" << Input::qhat0 << "_tau_multi_Qmed"  << Input::Qmed << "_type" << i << ".dat";
         }
-        if(nEloss==15){
-          if(MULTI==2 && TAUS==0) ss[i][j] << "../Output/PbPb/Probability/dsigma_dpTdy_" << Input::Ecm << "GeV_qhat" << Input::qhat0 << "_multip_type" << i << j << ".dat";
-          if(MULTI==2 && TAUS==1) ss[i][j] << "../Output/PbPb/Probability/dsigma_dpTdy_" << Input::Ecm << "GeV_qhat" << Input::qhat0 << "_tau_multip_type" << i << j << ".dat";
+        if(nEloss!=1){
+          if(MULTI==2 && TAUS==0) ss[i][j] << "../Output/PbPb/Probability/dsigma_dpTdy_" << Input::Ecm << "GeV_qhat" << Input::qhat0 << "_probability_type" << i << j << ".dat";
+          if(MULTI==2 && TAUS==1) ss[i][j] << "../Output/PbPb/Probability/dsigma_dpTdy_" << Input::Ecm << "GeV_qhat" << Input::qhat0 << "_tau_probability_type" << i << j << ".dat";
         }
         OutputFile[i][j]=ss[i][j].str();
         OutStream[i][j].open(OutputFile[i][j], std::ofstream::out);
